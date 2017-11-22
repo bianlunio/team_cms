@@ -10,6 +10,5 @@ class MotionViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         # user_team = self.request.user.member.current_team
-        user_team = self.request.user.member.teams.first()
-        queryset = Motion.objects.filter(teams__team=user_team)
+        queryset = Motion.objects.filter(teams__team=self.request.team)
         return queryset

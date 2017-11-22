@@ -8,8 +8,8 @@ class Motion(models.Model):
     title = models.CharField('辩题名称', max_length=100)
     title_zheng = models.CharField('正方持方', max_length=100)
     title_fan = models.CharField('反方持方', max_length=100)
-    description = models.TextField('题解')
-    comment = models.TextField('备注')
+    description = models.TextField('题解', blank=True)
+    comment = models.TextField('备注', blank=True)
     created = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True)
 

@@ -1,3 +1,13 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models import Motion, TeamMotion
+
+
+@admin.register(Motion)
+class MotionAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(TeamMotion)
+class TeamMotionAdmin(admin.ModelAdmin):
+    pass

@@ -36,20 +36,8 @@ class SNPool(models.Model):
 
     def _generate_sn(self, sn_type: SNType, save=True):
 
-        def calculate_sumcheck(s: str, t: int):
-            flag = True
-            n_list = map(int, s)
-            sum = t
-            for d in n_list:
-                if flag:
-                    sum += d * 2
-                else:
-                    sum += d * 3
-                flag = not flag
-            return sum % 10
-
         random_string = get_random_string(13, allowed_chars=string.digits)
-        sumcheck = calculate_sumcheck(random_string, sn_type.value)
+        sumcheck = _calculate_sumcheck(random_string, sn_type.value)
         sn = f'1{sn_type.value}{random_string}{sumcheck}'
         self.sn = sn
         self.random_string = random_string
@@ -61,3 +49,35 @@ class SNPool(models.Model):
                 return self._generate_sn(sn_type, save)
         else:
             return self
+
+    @staticmethod
+    def is_valid_sn(sn: str, sn_type: SNType):
+
+        def _split_sn(_sn):
+            _t = _sn[1]
+            _random_string = _sn[2:-1]
+            _sumcheck = _sn[-1]
+            return {
+                'sn_type': int(_t),
+                'random_string': _random_string,
+                'sumcheck': int(_sumcheck),
+            }
+
+        sn_data = _split_sn(sn)
+        if sn_type.value != sn_data['sn_type']:
+            return False
+        sumcheck = _calculate_sumcheck(sn_data['random_string'], sn_data['sn_type'])
+        return sumcheck == sn_data['sumcheck']
+
+
+def _calculate_sumcheck(s: str, t: int):
+    flag = True
+    n_list = map(int, s)
+    sum = t
+    for d in n_list:
+        if flag:
+            sum += d * 2
+        else:
+            sum += d * 3
+        flag = not flag
+    return sum % 10
