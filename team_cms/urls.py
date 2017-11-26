@@ -17,13 +17,17 @@ from django.contrib import admin
 from django.urls import path, include
 
 from rest_framework.routers import DefaultRouter
+from rest_framework.authtoken import views as authtoken_views
 
-from motions import views
+from motions import views as motion_views
+from team_management import views as team_management_views
 
 router = DefaultRouter()
-router.register(r'motions', views.MotionViewSet)
+router.register(r'motions', motion_views.MotionViewSet)
+router.register(r'members', team_management_views.MemberViewset)
 
 urlpatterns = [
     path('api/', include(router.urls)),
     path('admin/', admin.site.urls),
+    path('api/token/', authtoken_views.obtain_auth_token)
 ]
