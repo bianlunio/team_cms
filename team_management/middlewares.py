@@ -1,4 +1,5 @@
 from django.contrib.auth.models import AnonymousUser
+from django.utils.functional import SimpleLazyObject
 
 from .models import Member
 
@@ -12,12 +13,12 @@ class MemberMiddleware:
         # Code to be executed for each request before
         # the view (and later middleware) are called.
 
+        def get_member(user):
+            return Member.objects.get(user=user)
+
         if not isinstance(request.user, AnonymousUser):
             try:
-                member = Member.objects.get(user=request.user)
-                request.member = member
-                team = member.teams.first()
-                request.team = team.team
+                request.member = SimpleLazyObject(lambda: get_member(request.user))
             except Member.DoesNotExist:
                 pass
 

@@ -11,9 +11,11 @@ class MotionViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated, )
 
     def get_queryset(self):
-        queryset = Motion.objects.filter(teams__team=self.request.team)
+        team = self.request.user.member.team
+        queryset = Motion.objects.filter(teams__team=team)
         return queryset
 
     def perform_create(self, serializer):
+        team = self.request.user.member.team
         motion = serializer.save()
-        TeamMotion.objects.create(motion=motion, team=self.request.team)
+        TeamMotion.objects.create(motion=motion, team=team)

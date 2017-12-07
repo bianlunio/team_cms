@@ -115,8 +115,6 @@ REST_FRAMEWORK = {
     )
 }
 
-MIDDLEWARE.append('team_management.middlewares.MemberMiddleware',)
-
 # Internationalization
 # https://docs.djangoproject.com/en/dev/topics/i18n/
 

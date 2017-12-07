@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.utils.functional import SimpleLazyObject
 from rest_framework.authtoken.models import Token
 
 from sn_dispatcher.tools import generate_team_sn, generate_member_sn
@@ -23,6 +24,12 @@ class Member(models.Model):
     name = models.CharField('姓名', max_length=10)
     nickname = models.CharField('昵称', max_length=10)
     school = models.CharField('学校', max_length=30)
+
+    @property
+    def team(self):
+        def get_team(member):
+            return member.teams.first().team
+        return SimpleLazyObject(lambda: get_team(self))
 
     class Meta:
         db_table = 'cms_member'
